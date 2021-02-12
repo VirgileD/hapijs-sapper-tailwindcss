@@ -14,9 +14,9 @@
     "aguid": "^2.0.0",
     "blipp": "^4.0.2",
     "hapi-auth-jwt2": "^10.2.0",
-    "hapi-auto-route": "^3.0.4",
     "hapi-server-session": "^5.1.2",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "wurst": "^5.0.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

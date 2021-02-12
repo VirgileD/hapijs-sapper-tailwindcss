@@ -3,7 +3,7 @@
 const Hapi = require('@hapi/hapi');
 const Blipp = require('blipp');
 const Path = require('path');
-
+const wurst = require('wurst');
 
 const validate = async function (decoded, request, h) {
     console.log('validate '+decoded.id);
@@ -34,11 +34,14 @@ const init = async () => {
     });
     server.auth.default('jwt');
     await server.register({
-      plugin: require('hapi-auto-route'),
-      options: {
-        routes_dir: Path.join(__dirname, 'routes')
-      }
-    });
+    plugin: wurst,
+    options: {
+      // ignore: 'foo/**/*.js',
+      cwd: Path.join(__dirname, 'routes'),
+      routes: '**/*routes.js',
+      log: true
+    },
+  })
     await server.register({
         plugin: require('hapi-server-session'),
         options: {
@@ -52,7 +55,8 @@ const init = async () => {
         encoding: 'none',    // we already used JWT to encode
         isSecure: true,      // warm & fuzzy feelings
         isHttpOnly: true,    // prevent client alteration
-        clearInvalid: false, // remove invalid cookies
+        clearInvalid: true, // remove invalid cookies
+        path: '/',           // so the token cookie set by /auth/login will be sent for any path
         strictHeader: true   // don't allow violations of RFC 6265
     });
     await server.start();
