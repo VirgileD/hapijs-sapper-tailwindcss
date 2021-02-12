@@ -12,6 +12,7 @@
   "dependencies": {
     "@hapi/hapi": "^20.1.0",
     "aguid": "^2.0.0",
+    "blipp": "^4.0.2",
     "hapi-auth-jwt2": "^10.2.0",
     "hapi-auto-route": "^3.0.4",
     "jsonwebtoken": "^8.5.1"

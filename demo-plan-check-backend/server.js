@@ -1,6 +1,7 @@
 'use strict';
 
 const Hapi = require('@hapi/hapi');
+const Blipp = require('blipp');
 const Path = require('path');
 
 const cookie_options = {
@@ -33,6 +34,7 @@ const init = async () => {
         port: 3000,
         host: 'localhost'
     });
+    await server.register({ plugin: Blipp, options: { showAuth: true } });
     await server.register(require('hapi-auth-jwt2'));
     server.auth.strategy('jwt', 'jwt', { key: 'NeverShareYourSecret', // Never Share your secret key
         validate,  // validate function defined above

@@ -6,19 +6,28 @@ var aguid       = require('aguid');
 module.exports = [{
     method: 'GET',
     path: '/',
-    config: { auth: false },
+    config: { 
+        auth: false,
+        description: 'non protected hello'
+    },
     handler: (request, h) => 'Hello'
 },
 {
     method: 'GET',
     path: '/prot',
-    config: { auth: 'jwt' },
+    config: { 
+        auth: 'jwt',
+        description: 'protected hello'
+    },
     handler: (request, h) => 'Hello prot'
 },
 {
     method: 'GET',
     path: '/login',
-    config: { auth: false },
+    config: { 
+        auth: false,
+        description: 'obviously non protected login endpoint - just hit to log in'
+    },
     handler: function(request, h) {
         var session = {
             valid: true, // this will be set to false when the person logs out
@@ -38,7 +47,12 @@ module.exports = [{
     }
 },
 {
-      method: ['GET','POST'], path: "/logout", config: { auth: 'jwt' },
+      method: ['GET'],
+      path: "/logout",
+      config: { 
+        auth: 'jwt',
+        description: 'obviously protected logout endpoint - just hit to log out'
+      },
       handler: function(request, h) {
         var decoded;
         if("Authorization" in request.headers) {
