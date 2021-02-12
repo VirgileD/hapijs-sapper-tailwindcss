@@ -1,6 +1,5 @@
 'use strict';
 var JWT         = require('jsonwebtoken');   // used to sign our content
-var JWT_SECRET  = process.env.JWTKEY || 'NeverShareYourSecret';
 var aguid       = require('aguid');
 
 module.exports = [
@@ -24,7 +23,7 @@ module.exports = [
         // here we allow anyone who hits /login
         var session = { id: aguid() };
         // sign the session as a JWT
-        var token = JWT.sign(session, JWT_SECRET);
+        var token = JWT.sign(session, request.conf.get('jwtkey'));
         console.log("New token created: "+token);
         request.session = session;
         // you can add other data in session with 
