@@ -19,7 +19,12 @@ module.exports = [{
         auth: 'jwt',
         description: 'protected hello'
     },
-    handler: (request, h) => 'Hello prot'
+    handler: function(request, h) {
+        return h.response({ message: 'Hello prot '+request.session.test})
+            .code(200)
+            .type('application/json')
+            .state("token", request.auth.token );// to update the ttl of the token cookie
+    }
 },
 {
     method: 'GET',
@@ -29,21 +34,23 @@ module.exports = [{
         description: 'obviously non protected login endpoint - just hit to log in'
     },
     handler: function(request, h) {
-        var session = {
-            valid: true, // this will be set to false when the person logs out
-            id: aguid(), // a random session id
-            exp: new Date().getTime() + 60 * 60 * 1000 // expires in 60 minutes time
-        };
+        // TODO: here you should use e.g. email and password in the request body to check the user against e.g. a db
+        // var { email, password } = req.body;
+        // const bcrypt = require("bcryptjs");
+        // const salt = await bcrypt.genSalt(10);
+        // crypted_password = await bcrypt.hash(password, salt);
+        // if(!db.users.find({ email: email, password: crypted_password })) h.response({ message: 'invalid credentials'}).type('application/json').code(401); 
+        var session = { id: aguid() };
         // sign the session as a JWT
         var token = JWT.sign(session, JWT_SECRET); // synchronous
         console.log("New token created: "+token);
-        request.server.app.sessions[session.id] = session;
-        console.log("session added with id "+session.id);
+        request.session = session;
+        // you can add other data in session with 
+        request.session.test = 'test';
         return h.response({ message: 'logged in'})
             .code(200)
             .type('application/json')
-            .header("Authorization", token)
-            .state("token", token, request.server.app.cookie_options);
+            .state("token", token );
     }
 },
 {
@@ -54,19 +61,10 @@ module.exports = [{
         description: 'obviously protected logout endpoint - just hit to log out'
       },
       handler: function(request, h) {
-        var decoded;
-        if("Authorization" in request.headers) {
-            console.log("found token in headers");
-            decoded = JWT.decode(request.headers.authorization, JWT_SECRET);
-        } else if("token" in request.state) {
-            console.log("found token in cookies");
-            decoded = JWT.decode(request.state.token, JWT_SECRET);
-        }
-        if(decoded && "id" in decoded) {
-            delete request.server.app.sessions[decoded.id];
-        }
+        delete request.session;
         return h.response({ message: 'logged out'})
             .code(200)
-            .type('application/json');
+            .type('application/json')
+            .unstate('token');
       }
 }]

@@ -4,21 +4,11 @@ const Hapi = require('@hapi/hapi');
 const Blipp = require('blipp');
 const Path = require('path');
 
-const cookie_options = {
-  ttl: 60 * 60 * 1000, // expires an hour from today
-  encoding: 'none',    // we already used JWT to encode
-  isSecure: true,      // warm & fuzzy feelings
-  isHttpOnly: true,    // prevent client alteration
-  clearInvalid: false, // remove invalid cookies
-  strictHeader: true   // don't allow violations of RFC 6265
-};
 
 const validate = async function (decoded, request, h) {
-    console.log('validating decoded'+JSON.stringify(decoded));
-    console.log('look for session in '+JSON.stringify(request.server.app.sessions));
-    
-    if(decoded.id in request.server.app.sessions &&
-        request.server.app.sessions[decoded.id].exp > new Date().getTime()) {
+    console.log('validate '+decoded.id);
+    console.log('validate '+JSON.stringify(request.session));
+    if(decoded.id === request.session.id) {
       console.log('valid');
       return { isValid: true };
     } else {
@@ -49,8 +39,22 @@ const init = async () => {
         routes_dir: Path.join(__dirname, 'routes')
       }
     });
-    server.app.sessions = {};
-    server.app.cookie_options = cookie_options;
+    await server.register({
+        plugin: require('hapi-server-session'),
+        options: {
+            cookie: {
+                isSecure: true, // never set to false in production
+            },
+        },
+    });
+    server.state('token', {
+        ttl: 60 * 60 * 1000, // expires an hour from now
+        encoding: 'none',    // we already used JWT to encode
+        isSecure: true,      // warm & fuzzy feelings
+        isHttpOnly: true,    // prevent client alteration
+        clearInvalid: false, // remove invalid cookies
+        strictHeader: true   // don't allow violations of RFC 6265
+    });
     await server.start();
     console.log('Server running on %s', server.info.uri);
 };
