@@ -1,0 +1,22 @@
+{
+  "name": "demo-plan-check-backend",
+  "version": "1.0.0",
+  "description": "This is the backend that will serve the demos ecent and services data for the Demo Plan & Check service",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@hapi/hapi": "^20.1.0",
+    "aguid": "^2.0.0",
+    "hapi-auth-jwt2": "^10.2.0",
+    "hapi-auto-route": "^3.0.4",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
