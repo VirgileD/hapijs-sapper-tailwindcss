@@ -24,7 +24,7 @@ module.exports = [
         var session = { id: aguid() };
         // sign the session as a JWT
         var token = JWT.sign(session, request.conf.get('jwtkey'));
-        console.log("New token created: "+token);
+        request.logger.debug("New token created: "+token);
         request.session = session;
         // you can add other data in session with 
         request.session.test = 'test';
