@@ -22,4 +22,21 @@ module.exports = {
     },
     enabled: isProduction // disable purge in dev
   },
+  theme: {
+    extend: {
+      colors: {
+        'wlcyan': '#41b4d2',
+        'wlblue': '#5f8ca0',
+        'wlgreen': '#46b8a6',
+        'wlbeige': '#a1a1a1',
+        'wlorange': '#f5af82',
+        'wloldpink': '#f08791',
+        'wlpink': '#d74b8c',
+        'wlgray': '#3c3c3c',
+      },
+      screens: {
+        '3xl': '1920px',
+      },
+    },
+  }
 };

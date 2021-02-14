@@ -8,12 +8,19 @@
     /* only apply purgecss on utilities, per Tailwind docs */
     /* purgecss start ignore */
     @tailwind base;
+    @layer base {
+      html {
+        @apply w-full;
+      }
+    }
     @tailwind components;
     /* purgecss end ignore */
 
     @tailwind utilities;
 </style>
+<div class="3xl">
 
-<Nav {segment}/>
+    <Nav {segment}/>
+    <slot></slot>
 
-<slot></slot>
+</div>
