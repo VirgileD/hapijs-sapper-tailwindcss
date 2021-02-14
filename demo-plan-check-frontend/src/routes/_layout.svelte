@@ -1,7 +1,7 @@
 <script>
-	import Nav from '../components/Nav.svelte';
+    import Nav from '../components/Nav.svelte';
+    export let segment;
 
-	export let segment;
 </script>
 
 <style global lang="postcss">
@@ -19,8 +19,9 @@
     @tailwind utilities;
 </style>
 <div class="3xl">
-
-    <Nav {segment}/>
+    {#if segment!==undefined}
+        <Nav {segment}/>
+    {/if}
     <slot></slot>
 
 </div>
