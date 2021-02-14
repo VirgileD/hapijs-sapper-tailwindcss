@@ -3,58 +3,21 @@
 </script>
 
 <style>
-	nav {
-		border-bottom: 1px solid rgba(255,62,0,0.1);
-		font-weight: 300;
-		padding: 0 1em;
-	}
-
-	ul {
-		margin: 0;
-		padding: 0;
-	}
-
-	/* clearfix */
-	ul::after {
-		content: '';
-		display: block;
-		clear: both;
-	}
-
-	li {
-		display: block;
-		float: left;
-	}
-
-	[aria-current] {
-		position: relative;
-		display: inline-block;
-	}
-
-	[aria-current]::after {
-		position: absolute;
-		content: '';
-		width: calc(100% - 1em);
-		height: 2px;
-		background-color: rgb(255,62,0);
-		display: block;
-		bottom: -1px;
-	}
-
-	a {
-		text-decoration: none;
-		padding: 1em 0.5em;
-		display: block;
-	}
 </style>
 
-<nav>
-	<ul>
-		<li><a aria-current="{segment === undefined ? 'page' : undefined}" href=".">home</a></li>
-		<li><a aria-current="{segment === 'about' ? 'page' : undefined}" href="about">about</a></li>
+<svelte:head>
+	<title>Ugly but working</title>
+</svelte:head>
 
-		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
-		     the blog data when we hover over the link or tap it on a touchscreen -->
-		<li><a rel=prefetch aria-current="{segment === 'blog' ? 'page' : undefined}" href="blog">blog</a></li>
-	</ul>
-</nav>
+<div class="flex flex-row text-wlgray h-16 my-6">
+    <div class="rounded-lg border-2 border-wlgray bg-wlcyan flex flex-row text-wlgray h-16">
+        <img class="mr-4" alt="WL" src="wl-small-logo-cyan.png"/>
+        <div class="mr-4 capitalize flex items-center justify-center text-2xl font-extrabold">Demo Plan &amp; Check</div>
+    </div>
+    <div class="mx-4 rounded-lg {segment===undefined? 'bg-wlpink' : 'border-wlpink border-2 hover:bg-wloldpink' } flex flex-row text-wlgray h-16">
+        <a href="/"><div class="h-16 px-4 text-wlgray flex items-center justify-center text-2xl">Demos</div></a>
+    </div>
+    <div class="mx-4 rounded-lg {segment==='services'? 'bg-wlpink' : 'border-wlpink border-2 hover:bg-wloldpink' } flex flex-row text-wlgray h-16">
+        <a href="/services"><div class="h-16 px-4 text-wlgray flex items-center justify-center text-2xl">Services</div></a>
+    </div>
+</div>
