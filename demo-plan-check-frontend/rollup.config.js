@@ -8,16 +8,29 @@ import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
-import css from 'rollup-plugin-css-only';
+import sveltePreprocess from "svelte-preprocess";
 
-const mode = process.env.NODE_ENV;
+const mode = process.env.NODE_ENV || process.env.ROLLUP_WATCH;
 const dev = mode === 'development';
+const production = !dev;
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 
 const onwarn = (warning, onwarn) =>
 	(warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
 	(warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) ||
 	onwarn(warning);
+
+const preprocess = sveltePreprocess({
+    // https://github.com/kaisermann/svelte-preprocess/#user-content-options
+    sourceMap: !production,
+    postcss: {
+        plugins: [
+            require("tailwindcss"), 
+            require("autoprefixer"),
+            require("postcss-nesting")
+        ],
+    },
+});
 
 export default {
 	client: {
@@ -31,10 +44,11 @@ export default {
 			svelte({
 				compilerOptions: {
 					dev,
-					hydratable: true
-				}
+					hydratable: true,
+				},
+				emitCss: true,
+				preprocess,
 			}),
-			css({ output: 'static/main.css'}),
 			url({
 				sourceDir: path.resolve(__dirname, 'src/node_modules/images'),
 				publicPath: '/client/'
@@ -85,7 +99,8 @@ export default {
 					generate: 'ssr',
 					hydratable: true
 				},
-				emitCss: false
+				emitCss: false,
+				preprocess,
 			}),
 			url({
 				sourceDir: path.resolve(__dirname, 'src/node_modules/images'),
