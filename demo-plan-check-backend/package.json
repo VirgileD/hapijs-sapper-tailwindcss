@@ -1,7 +1,7 @@
 {
-  "name": "demo-plan-check-backend",
-  "version": "1.0.0",
-  "description": "This is the backend that will serve the demos ecent and services data for the Demo Plan & Check service",
+  "name": "WL-DCP-B",
+  "description": "The backend for the WL Demo Check & Plan App",
+  "version": "0.0.1",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
