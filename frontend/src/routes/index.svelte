@@ -1,12 +1,11 @@
 <script>
 	import { goto } from '@sapper/app';
-	import * as api from 'api.js';
+
 	$: email = '';
 	$: password = '';
 	$: error = undefined;
 
 	function handleLogin() {
-	    api.post(`auth/login`, { email, password }).then((res) => {console.log(res);});
 	    goto("/demos");
 	}
 </script>

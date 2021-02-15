@@ -1,6 +1,6 @@
 <!-- Demos -->
 <script>
-    import successkid from 'images/successkid.jpg';
+    import wlSmallLogoRound from 'images/wl-small-logo-round.png';
 </script>
 
 <style>
@@ -14,7 +14,7 @@
     <div class="rounded-lg border-2 border-wlblue shadow max-w-md mx-auto">
         <header class="flex flex-row space-x-6">
             <div class="my-auto">
-                <img alt="wl logo" class="mx-auto ml-2 mt-2" src="wl-small-logo-round.png" />
+                <img alt="wl logo" class="mx-auto ml-2 mt-2" src="{wlSmallLogoRound}" />
             </div>
             <div class="container my-auto">
                 <h3 class="text-lg font-bold">Demo Label</h3>

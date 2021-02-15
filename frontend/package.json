@@ -3,16 +3,19 @@
   "description": "TODO",
   "version": "0.0.1",
   "scripts": {
-    "dev": "sapper dev",
+    "dev": "NODE_ENV=development sapper dev",
     "build": "sapper build --legacy",
     "export": "sapper export --legacy",
     "start": "node __sapper__/build"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "compression": "^1.7.1",
+    "express-session": "^1.17.1",
     "polka": "next",
     "postcss": "^8.2.6",
     "rollup-plugin-postcss": "^4.0.0",
+    "session-file-store": "^1.5.0",
     "sirv": "^1.0.0"
   },
   "devDependencies": {

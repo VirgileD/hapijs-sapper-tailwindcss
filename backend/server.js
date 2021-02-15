@@ -6,14 +6,22 @@ const Path = require('path');
 const Wurst = require('wurst');
 const Config = require('configue');
 
+// the env var MUST contain JWTKEY
+if(process.env.NODE_ENV!=='development' && !process.env.JWTKEY) {
+    console.error('You must set JWTKEY env var when in production');
+    process.exit(1);
+}
+// and can define SERVER__HOST (localhost), SERVER__PORT(3001), TOKENTTL(60*60*1000 i.e. 1h), LOGLEVEL (production=>info, dev=>debug)
+// which can all be prefixed by "XXX_" where XXX is set by process.env.APP_NAME or by __ if APP_NAME is not set
+// these can also pe put in the config.yaml file
 const config = new Config({
   disable: {argv: true},
   files: [{file: './config.yaml', format: require('nconf-yaml')}],
   normalize: 'lowerCase',
   separator: '__',
-  ignorePrefix: 'DPC_',
+  ignorePrefix: process.env.APP_NAME ? process.env.APP_NAME + '_' : '__',
   // you can use `node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"` to generate a good jwtkey
-  defaults: { server: { host: 'localhost', port: 3001, routes: { cors: true }}, jwtkey:'Z/q3QjX2ng6CN/sAAHamvcJNQRDaAKr4tAHF7kaeWvLymEJ1MkatbHDn3Lvm/aRsjYuLiCleTbLsc6cyghnEGGcmz7NyxjO9kePUfKoVuy3vevKueA4xvGOmURQi13dYmG6Z9hjdjOhjb5esrQYRJshKuQuwujBVQekRl5kgykhhg3FIqHMu3itAcn9HXaoSg95DOPcObqSRkxcMEfrj9gAJfIaN+loWLhuD98w4f0sUOoCvt6sYQGm/ZpPlPOCJ1vev2A6UxvuZyvnF+qbXAH973erfEnMUJ5SUquAhYuytCkPWCFig1x8D4nMNSA8JQ4Crecku41VBvR7dzcZGkw=='},
+  defaults: { server: { host: 'localhost', port: 3001, routes: { cors: true }}, jwtkey: 'NotAGoodJwtKey' },
   models: {serverOptions: {host: 'server:host', port: 'server:port', routes: { cors:  'server:routes:cors' }}}
 });
 
@@ -79,7 +87,7 @@ const init = async () => {
     });
     
     server.state('token', {
-        ttl: config.get('token__ttl',60 * 60 * 1000), // expires an hour from now
+        ttl: config.get('tokenttl',60 * 60 * 1000), // expires an hour from now
         encoding: 'none',    // we already used JWT to encode
         isSecure: true,      // warm & fuzzy feelings
         isHttpOnly: true,    // prevent client alteration
