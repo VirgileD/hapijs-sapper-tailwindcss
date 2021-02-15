@@ -13,8 +13,8 @@ const config = new Config({
   separator: '__',
   ignorePrefix: 'DPC_',
   // you can use `node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"` to generate a good jwtkey
-  defaults: { server: { host: 'localhost', port: 3000}, jwtkey:'Z/q3QjX2ng6CN/sAAHamvcJNQRDaAKr4tAHF7kaeWvLymEJ1MkatbHDn3Lvm/aRsjYuLiCleTbLsc6cyghnEGGcmz7NyxjO9kePUfKoVuy3vevKueA4xvGOmURQi13dYmG6Z9hjdjOhjb5esrQYRJshKuQuwujBVQekRl5kgykhhg3FIqHMu3itAcn9HXaoSg95DOPcObqSRkxcMEfrj9gAJfIaN+loWLhuD98w4f0sUOoCvt6sYQGm/ZpPlPOCJ1vev2A6UxvuZyvnF+qbXAH973erfEnMUJ5SUquAhYuytCkPWCFig1x8D4nMNSA8JQ4Crecku41VBvR7dzcZGkw=='},
-  models: {serverOptions: {host: 'server:host', port: 'server:port'}}
+  defaults: { server: { host: 'localhost', port: 3001, routes: { cors: true }}, jwtkey:'Z/q3QjX2ng6CN/sAAHamvcJNQRDaAKr4tAHF7kaeWvLymEJ1MkatbHDn3Lvm/aRsjYuLiCleTbLsc6cyghnEGGcmz7NyxjO9kePUfKoVuy3vevKueA4xvGOmURQi13dYmG6Z9hjdjOhjb5esrQYRJshKuQuwujBVQekRl5kgykhhg3FIqHMu3itAcn9HXaoSg95DOPcObqSRkxcMEfrj9gAJfIaN+loWLhuD98w4f0sUOoCvt6sYQGm/ZpPlPOCJ1vev2A6UxvuZyvnF+qbXAH973erfEnMUJ5SUquAhYuytCkPWCFig1x8D4nMNSA8JQ4Crecku41VBvR7dzcZGkw=='},
+  models: {serverOptions: {host: 'server:host', port: 'server:port', routes: { cors:  'server:routes:cors' }}}
 });
 
 const validate = async function (decoded, request, h) {

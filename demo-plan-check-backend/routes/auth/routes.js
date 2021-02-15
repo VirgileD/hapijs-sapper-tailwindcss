@@ -5,14 +5,14 @@ var aguid       = require('aguid');
 module.exports = [
 {
     path: '/login',
-    method: 'GET',
+    method: 'POST',
     config: { 
         auth: false,
         description: 'obviously non protected login endpoint - just hit to log in'
     },
     handler: function(request, h) {
+        var { email, password } = request.payload;
         // TODO: here you should use e.g. email and password in the request body to check the user against e.g. a db
-        // var { email, password } = req.body;
         // const bcrypt = require("bcryptjs");
         // if(!db.users.find({ email: email })) h.response({ message: 'unknown user'}).type('application/json').code(404);
         // if(!(user = db.users.find({ email: email }))) h.response({ message: 'unknown user'}).type('application/json').code(404);
