@@ -3,8 +3,9 @@
 	$: email = '';
 	$: password = '';
 	$: error = undefined;
-	
+
 	function handleLogin() {
+	    console.log(process.env.API_URI);
 	    goto("/demos");
 	}
 </script>

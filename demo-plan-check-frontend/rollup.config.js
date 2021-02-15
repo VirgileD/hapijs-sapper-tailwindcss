@@ -9,6 +9,7 @@ import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import sveltePreprocess from "svelte-preprocess";
+import includeEnv from "svelte-environment-variables";
 
 const mode = process.env.NODE_ENV || process.env.ROLLUP_WATCH;
 const dev = mode === 'development';
@@ -39,7 +40,9 @@ export default {
 		plugins: [
 			replace({
 				'process.browser': true,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				'process.env.NODE_ENV': JSON.stringify(mode),
+				'process.env.API_URI': JSON.stringify(process.env.API_URI) || 'http://localhost:3001/',
+				...includeEnv('SVELTER_APP_', 'process_env.', [] ),
 			}),
 			svelte({
 				compilerOptions: {
@@ -91,7 +94,7 @@ export default {
 		plugins: [
 			replace({
 				'process.browser': false,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				'process.env.NODE_ENV': JSON.stringify(mode),
 			}),
 			svelte({
 				compilerOptions: {
@@ -125,7 +128,7 @@ export default {
 			resolve(),
 			replace({
 				'process.browser': true,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				'process.env.NODE_ENV': JSON.stringify(mode),
 			}),
 			commonjs(),
 			!dev && terser()
