@@ -1,0 +1,5 @@
+/node_modules/
+/__sapper__/
+# other resources in src/node_modules, likei images, can be imported in the frontend routes/components
+# with import successkid from 'images/successkid.jpg'; where xxx is in src/node_modules
+/src/node_modules/@sapper/
