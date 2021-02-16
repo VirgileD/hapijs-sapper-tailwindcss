@@ -1,6 +1,21 @@
 <!-- Demos -->
+<script context="module">
+    import { get } from "./_api.js";
+    // executed on the server possibly when SSR
+    export async function preload(page, session) {
+        const { token } = session;
+        if (!token) {
+            return this.redirect(302, "/");
+        }
+
+        const response_from_api = await get('hello/prot', token);
+        const payload = await response_from_api.text();
+        return JSON.parse(payload);
+    }
+</script>
 <script>
     import wlSmallLogoRound from 'images/wl-small-logo-round.png';
+    export let message;
 </script>
 
 <style>
@@ -9,7 +24,7 @@
 <svelte:head>
 	<title>Demos</title>
 </svelte:head>
-
+<h1>{message}</h1>
 <div class="rounded bg-white shadow max-w-md mx-auto">
     <div class="rounded-lg border-2 border-wlblue shadow max-w-md mx-auto">
         <header class="flex flex-row space-x-6">

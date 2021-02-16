@@ -25,6 +25,7 @@ if(!dev && (!process.env.SESSIONS_SECRET || !process.env.SESSIONS_PATH)) {
                 saveUninitialized: true,
                 cookie: {
                     maxAge: process.env.COOKIES_TTL!==undefined ? Number(process.env.COOKIES_TTL) : (60 * 60 * 1000), // default is one hour
+                    sameSite: "Lax",
                 },
                 store: new FileStore({
                     path: process.env.SESSIONS_PATH || `.sessions`,

@@ -95,6 +95,8 @@ export default {
 			replace({
 				'process.browser': false,
 				'process.env.NODE_ENV': JSON.stringify(mode),
+				'PROCESS_ENV__API_URI': JSON.stringify(process.env.API_URI) || 'http://localhost:3001',
+				...includeEnv('SVELTER_APP_', 'PROCESS_ENV__', [] ),
 			}),
 			svelte({
 				compilerOptions: {

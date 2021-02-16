@@ -7,8 +7,11 @@ const Wurst = require('wurst');
 const Config = require('configue');
 
 // the env var MUST contain JWTKEY
-if(process.env.NODE_ENV!=='development' && !process.env.JWTKEY) {
+const check_env_var = process.env.JWTKEY && process.env.APP_NAME && process.env.APP_FQDN
+if(process.env.NODE_ENV!=='development' && !check_env_var) {
     console.error('You must set JWTKEY env var when in production');
+    console.error('You must set APP_NAME env var when in production');
+    console.error('You must set APP_FQDN env var when in production');
     process.exit(1);
 }
 // and can define SERVER__HOST (localhost), SERVER__PORT(3001), TOKENTTL(60*60*1000 i.e. 1h), LOGLEVEL (production=>info, dev=>debug)
@@ -19,24 +22,21 @@ const config = new Config({
   files: [{file: './config.yaml', format: require('nconf-yaml')}],
   normalize: 'lowerCase',
   separator: '__',
-  ignorePrefix: process.env.APP_NAME ? process.env.APP_NAME + '_' : '__',
+  ignorePrefix: process.env.APP_NAME ? process.env.APP_NAME + '_' : 'XXXX_',
   // you can use `node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"` to generate a good jwtkey
-  defaults: { server: { host: 'localhost', port: 3001, routes: { cors: true }}, jwtkey: 'NotAGoodJwtKey' },
+  defaults: { 
+    server: { host: 'localhost', port: 3001, routes: { cors: true }}, 
+    jwtkey: 'NotAGoodJwtKey', 
+    app_name: process.env.APP_NAME ? process.env.APP_NAME : 'XXXX',
+    app_id: process.env.APP_FQDN ? process.env.APP_FQDN : 'localhost',
+  },
   models: {serverOptions: {host: 'server:host', port: 'server:port', routes: { cors:  'server:routes:cors' }}}
 });
 
+// this is the function used to validate the decoded JWT token
 const validate = async function (decoded, request, h) {
-    request.logger.debug('validate '+decoded.id);
-    request.logger.debug('validate '+JSON.stringify(request.session));
-    if(decoded.id === request.session.id) {
-      request.logger.debug('valid');
-      return { isValid: true };
-    } else {
-      request.logger.debug('not valid');
-      return { isValid: false };
-    }
+    return { isValid: true };
 };
-
 
 const init = async () => {
     const server = Hapi.server(config._.serverOptions);
@@ -64,15 +64,6 @@ const init = async () => {
     });
     
     await server.register({
-        plugin: require('hapi-server-session'),
-        options: {
-            cookie: {
-                isSecure: true, // never set to false in production
-            },
-        },
-    });
-    
-    await server.register({
         plugin: require('hapi-pino'),
         options: {
             prettyPrint: process.env.NODE_ENV !== 'production',
@@ -85,16 +76,7 @@ const init = async () => {
             level: config.get('loglevel', process.env.NODE_ENV !== 'production' ? 'debug' : 'info')
         }
     });
-    
-    server.state('token', {
-        ttl: config.get('tokenttl',60 * 60 * 1000), // expires an hour from now
-        encoding: 'none',    // we already used JWT to encode
-        isSecure: true,      // warm & fuzzy feelings
-        isHttpOnly: true,    // prevent client alteration
-        clearInvalid: true,  // remove invalid cookies
-        path: '/',           // so the token cookie set by /auth/login will be sent for any path
-        strictHeader: true   // don't allow violations of RFC 6265
-    });
+
     await server.start();
     server.logger.debug('Server running on %s', server.info.uri);
 };

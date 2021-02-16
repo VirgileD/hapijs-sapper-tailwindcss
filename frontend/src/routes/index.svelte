@@ -1,13 +1,29 @@
 <script>
-	import { goto } from '@sapper/app';
+	import { goto,stores } from '@sapper/app';
 
 	$: email = '';
 	$: password = '';
 	$: error = undefined;
+	const { session } = stores();
 
-	function handleLogin() {
-	    goto("/demos");
-	}
+	const handleLogin = async () => {
+	    const response = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({ email, password })
+        });
+        console.log(response);
+        if(response.ok) {
+            $session.token = response.headers.get('authorization');
+            goto("/demos");
+        } else {
+            error = response.statusText;
+        }
+        return false;
+    }
 </script>
 
 <style>
