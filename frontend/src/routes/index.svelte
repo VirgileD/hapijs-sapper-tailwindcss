@@ -18,7 +18,7 @@
         console.log(response);
         if(response.ok) {
             $session.token = response.headers.get('authorization');
-            goto("/demos");
+            goto("/events");
         } else {
             error = response.statusText;
         }

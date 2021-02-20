@@ -8,7 +8,7 @@
             return this.redirect(302, "/");
         }
 
-        const response_from_api = await get('hello/prot', token);
+        const response_from_api = await get('events', token);
         const payload = await response_from_api.text();
         return JSON.parse(payload);
     }

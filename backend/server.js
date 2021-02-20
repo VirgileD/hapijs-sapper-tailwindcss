@@ -2,9 +2,13 @@
 
 const Hapi = require('@hapi/hapi');
 const Blipp = require('blipp');
-const Path = require('path');
 const Wurst = require('wurst');
 const Config = require('configue');
+const nconf_yaml = require('nconf-yaml');
+const Jwt2 = require('hapi-auth-jwt2');
+const pino = require('hapi-pino');
+
+const Path = require('path');
 
 // the env var MUST contain JWTKEY
 const check_env_var = process.env.JWTKEY && process.env.APP_NAME && process.env.APP_FQDN
@@ -19,13 +23,13 @@ if(process.env.NODE_ENV!=='development' && !check_env_var) {
 // these can also pe put in the config.yaml file
 const config = new Config({
   disable: {argv: true},
-  files: [{file: './config.yaml', format: require('nconf-yaml')}],
+  files: [{file: './config.yaml', format: nconf_yaml }],
   normalize: 'lowerCase',
   separator: '__',
   ignorePrefix: process.env.APP_NAME ? process.env.APP_NAME + '_' : 'XXXX_',
   // you can use `node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"` to generate a good jwtkey
   defaults: { 
-    server: { host: 'localhost', port: 3001, routes: { cors: true }}, 
+    server: { host: '0.0.0.0', port: 3001, routes: { cors: true }}, 
     jwtkey: 'NotAGoodJwtKey', 
     app_name: process.env.APP_NAME ? process.env.APP_NAME : 'XXXX',
     app_id: process.env.APP_FQDN ? process.env.APP_FQDN : 'localhost',
@@ -39,13 +43,13 @@ const validate = async function (decoded, request, h) {
 };
 
 const init = async () => {
-    const server = Hapi.server(config._.serverOptions);
+    const server = Hapi.Server(config._.serverOptions);
     
     await server.register(config.plugin17('conf'));
     
     await server.register({ plugin: Blipp, options: { showAuth: true } });
     
-    await server.register(require('hapi-auth-jwt2'));
+    await server.register(Jwt2);
     server.auth.strategy('jwt', 'jwt', { key: config.get('jwtkey'), // Never Share your secret key
         validate,  // validate function defined above
         verifyOptions: {
@@ -58,13 +62,13 @@ const init = async () => {
         options: {
             // ignore: 'foo/**/*.js',
             cwd: Path.join(__dirname, 'routes'),
-            routes: '**/*routes.js',
+            routes: '**/*-routes.cjs', // Wurst loads routes with require so it has to be commonjs files
             log: true
         },
     });
     
     await server.register({
-        plugin: require('hapi-pino'),
+        plugin: pino,
         options: {
             prettyPrint: process.env.NODE_ENV !== 'production',
             logPayload: false,

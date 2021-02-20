@@ -1,6 +1,5 @@
 'use strict';
-var JWT         = require('jsonwebtoken');   // used to sign our content
-var aguid       = require('aguid');
+const jwt = require('jsonwebtoken');   // used to sign our content
 
 function create_jwt_token(public_claims, request_conf) {
      const payload = { 
@@ -10,7 +9,7 @@ function create_jwt_token(public_claims, request_conf) {
      Object.keys(public_claims).forEach(function(key) {
          payload[key] = public_claims[key];
      });
-     return JWT.sign(payload, request_conf.get('jwtkey'));
+     return jwt.sign(payload, request_conf.get('jwtkey'));
 }
 
 module.exports = [

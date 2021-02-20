@@ -7,13 +7,13 @@
     
     let selected = 'text-white bg-gray-900 border-2 border-wlpink';
     let unselected = 'text-gray-300 hover:bg-gray-700 hover:text-white';
-    function switchTo(event) {
-        if(current==='demos') {
+    function switchTo() {
+        if(current==='events') {
             current = 'services';
             goto('services');
         } else {
-            current = 'demos';
-            goto('demos');
+            current = 'events';
+            goto('events');
         }
     }
     const handleLogout = async () => {
@@ -40,7 +40,7 @@
         </div>
         <div class="hidden sm:block sm:ml-6">
           <div class="flex space-x-4">
-            <div on:click="{switchTo}" class="{current === 'demos' ? selected : unselected} clickon px-3 py-2 rounded-md text-sm font-medium">Events</div>
+            <div on:click="{switchTo}" class="{current === 'events' ? selected : unselected} clickon px-3 py-2 rounded-md text-sm font-medium">Events</div>
             <div on:click="{switchTo}" class="{current === 'services' ? selected : unselected} clickon px-3 py-2 rounded-md text-sm font-medium">Services</div>
           </div>
         </div>

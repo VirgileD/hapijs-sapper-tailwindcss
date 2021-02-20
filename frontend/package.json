@@ -1,6 +1,6 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "wl-dpc-f",
+  "description": "The frontend for the WL Demo Check & Plan App",
   "version": "0.0.1",
   "scripts": {
     "dev": "NODE_ENV=development sapper dev",
