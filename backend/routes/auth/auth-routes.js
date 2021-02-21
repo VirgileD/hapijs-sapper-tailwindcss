@@ -23,7 +23,7 @@ module.exports = [
     handler: function(request, h) {
         var { email, password } = request.payload;
         // TODO: here you should use e.g. email and password in the request body to check the user against e.g. a db
-        // a role can also be retrieved
+        // a role can also be retrieved and set to the user (in the jwt)
         const role = ['user'];
         // const bcrypt = require("bcryptjs");
         // if(!db.users.find({ email: email })) h.response({ message: 'unknown user'}).type('application/json').code(404);
